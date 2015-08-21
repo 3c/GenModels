@@ -24,7 +24,6 @@ hs_err_pid*
 ### Eclipse template
 *.pydevproject
 .metadata
-.gradle
 bin/
 tmp/
 *.tmp
