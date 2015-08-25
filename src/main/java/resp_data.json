@@ -1,0 +1,1094 @@
+[
+  {
+    "className": "h3. [201]用户注册接口( /signup)",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [202]用户登录接口( /signin)",
+    "classParamsList": [
+      {
+        "name": "uid",
+        "type": "string",
+        "instruction": "登录成功返回的用户id"
+      },
+      {
+        "name": "token",
+        "type": "string",
+        "instruction": "64位随机字符串"
+      }
+    ]
+  },
+  {
+    "className": "h3. [203]第三方登陆 接口( /connect)",
+    "classParamsList": [
+      {
+        "name": "uid",
+        "type": "int",
+        "instruction": "登录成功返回的用户id"
+      },
+      {
+        "name": "token",
+        "type": "string",
+        "instruction": "64位随机字符串"
+      }
+    ]
+  },
+  {
+    "className": "h3. [204]轮播图接口( /picture-config)",
+    "classParamsList": [
+      {
+        "name": "title",
+        "type": "string",
+        "instruction": "标题"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "图片地址"
+      },
+      {
+        "name": "type",
+        "type": "int",
+        "instruction": "类型",
+        "comments": "0:id; 1:链接"
+      },
+      {
+        "name": "params",
+        "type": "string",
+        "instruction": "链接或id",
+        "comments": "type等于0时id,type\u003d1时链接"
+      },
+      {
+        "name": "weight",
+        "type": "int",
+        "instruction": "图片显示顺序",
+        "comments": "值越大越前置"
+      }
+    ]
+  },
+  {
+    "className": "h3. [205]获取团购爆款商品接口( /groupon)",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "商品市场价"
+      },
+      {
+        "name": "groupon_price",
+        "type": "decimal",
+        "instruction": "团购价"
+      },
+      {
+        "name": "discount",
+        "type": "float",
+        "instruction": "折扣"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "instruction": "库存"
+      },
+      {
+        "name": "desc",
+        "type": "string",
+        "instruction": "买点"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "商品图片地址"
+      },
+      {
+        "name": "begin_time",
+        "type": "int",
+        "instruction": "开团时间"
+      },
+      {
+        "name": "end_time",
+        "type": "int",
+        "instruction": "截团时间"
+      }
+    ]
+  },
+  {
+    "className": "h3. [206]获取品牌活动接口( /brand-activity)",
+    "classParamsList": [
+      {
+        "name": "name",
+        "type": "string",
+        "instruction": "活动名称"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "图片"
+      },
+      {
+        "name": "start_date",
+        "type": "int",
+        "instruction": "开始时间"
+      },
+      {
+        "name": "end_date",
+        "type": "int",
+        "instruction": "结束时间"
+      },
+      {
+        "name": "logo",
+        "type": "string",
+        "instruction": "品牌logo"
+      },
+      {
+        "name": "desc",
+        "type": "string",
+        "instruction": "品牌简介"
+      }
+    ]
+  },
+  {
+    "className": "h3. [207]品牌活动商品接口( /activity-goods)",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "商品市场价"
+      },
+      {
+        "name": "activity_price",
+        "type": "decimal",
+        "instruction": "活动价格"
+      },
+      {
+        "name": "discount",
+        "type": "float",
+        "instruction": "折扣"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "instruction": "库存"
+      },
+      {
+        "name": "desc",
+        "type": "string",
+        "instruction": "买点"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "商品图片地址"
+      }
+    ]
+  },
+  {
+    "className": "h3. [208]搜索商品( /search)",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "goods_brand",
+        "type": "string",
+        "instruction": "商品品牌"
+      },
+      {
+        "name": "goods_img",
+        "type": "string",
+        "instruction": "商品图片"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售数量"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "市场价"
+      },
+      {
+        "name": "brand_logo",
+        "type": "string",
+        "instruction": "品牌logo"
+      },
+      {
+        "name": "groupon_price",
+        "type": "decimal",
+        "instruction": "团购价"
+      }
+    ]
+  },
+  {
+    "className": "h3. [209]商品分类页( /category)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "分类id"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "instruction": "分类名称"
+      },
+      {
+        "name": "twolevel",
+        "type": "array",
+        "instruction": "二级分类"
+      }
+    ]
+  },
+  {
+    "className": "h3. [211]商品列表页( /goods)",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "goods_brand",
+        "type": "string",
+        "instruction": "商品品牌"
+      },
+      {
+        "name": "goods_img",
+        "type": "string",
+        "instruction": "商品图片"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售数量"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "市场价"
+      },
+      {
+        "name": "brand_logo",
+        "type": "string",
+        "instruction": "品牌logo"
+      }
+    ]
+  },
+  {
+    "className": "h3. [212]商品详情页( /goods-detail/{id})",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "goods_brand",
+        "type": "string",
+        "instruction": "商品品牌"
+      },
+      {
+        "name": "goods_desc",
+        "type": "string",
+        "instruction": "商品详情"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售数量"
+      },
+      {
+        "name": "shop_id",
+        "type": "int",
+        "instruction": "商家id"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "市场价"
+      },
+      {
+        "name": "points",
+        "type": "int",
+        "instruction": "评分"
+      },
+      {
+        "name": "comment_nums",
+        "type": "int",
+        "instruction": "评论数"
+      },
+      {
+        "name": "islike",
+        "type": "int",
+        "instruction": "是否喜欢",
+        "comments": "0:不喜欢,1:喜欢"
+      },
+      {
+        "name": "like_nums",
+        "type": "int",
+        "instruction": "喜欢总数"
+      },
+      {
+        "name": "is_group",
+        "type": "int",
+        "instruction": "是否是团购",
+        "comments": "0:不是; 1:是"
+      },
+      {
+        "name": "imageInfo",
+        "type": "array",
+        "instruction": "图片信息",
+        "comments": "各属性的第一张图片最多5张"
+      },
+      {
+        "name": "sku_show",
+        "type": "array",
+        "instruction": "所有属性展示",
+        "comments": "name:属性名称"
+      },
+      {
+        "name": "goods_sku",
+        "type": "array",
+        "instruction": "商品属性",
+        "comments": "id:商品属性id"
+      },
+      {
+        "name": "total_stock",
+        "type": "int",
+        "instruction": "总库存"
+      },
+      {
+        "name": "promotion",
+        "type": "array",
+        "instruction": "促销",
+        "comments": "id:活动id,desc:活动描述"
+      },
+      {
+        "name": "sku",
+        "type": "array",
+        "instruction": "单sku属性",
+        "comments": "id:sku属性id,sku:编码值,price:价格"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "instruction": "单品库存"
+      },
+      {
+        "name": "discount",
+        "type": "float",
+        "instruction": "折扣"
+      },
+      {
+        "name": "start_date",
+        "type": "int",
+        "instruction": "开团时间"
+      },
+      {
+        "name": "end_date",
+        "type": "int",
+        "instruction": "截团时间"
+      }
+    ]
+  },
+  {
+    "className": "h3. [213]品牌街( /brandstreet)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "品牌id"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "instruction": "品牌名称"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "品牌图片"
+      },
+      {
+        "name": "logo",
+        "type": "string",
+        "instruction": "品牌logo图片"
+      },
+      {
+        "name": "created",
+        "type": "int",
+        "instruction": "创建时间"
+      },
+      {
+        "name": "type",
+        "type": "int",
+        "instruction": "type:1是狗民网自营;"
+      }
+    ]
+  },
+  {
+    "className": "h3. [214]店铺页面( /shop/{id})",
+    "classParamsList": [
+      {
+        "name": "shop_id",
+        "type": "int",
+        "instruction": "商家id"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "instruction": "商家名称"
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "instruction": "商家图片"
+      },
+      {
+        "name": "slogan",
+        "type": "string",
+        "instruction": "商家口号"
+      },
+      {
+        "name": "desc",
+        "type": "string",
+        "instruction": "商家简介"
+      },
+      {
+        "name": "telphone",
+        "type": "int",
+        "instruction": "客服电话"
+      }
+    ]
+  },
+  {
+    "className": "h3. [215]店铺下的商品( /shop-goods)",
+    "classParamsList": [
+      {
+        "name": "goods_id",
+        "type": "int",
+        "instruction": "商品id"
+      },
+      {
+        "name": "goods_name",
+        "type": "string",
+        "instruction": "商品名称"
+      },
+      {
+        "name": "goods_brand",
+        "type": "string",
+        "instruction": "商品品牌"
+      },
+      {
+        "name": "goods_img",
+        "type": "string",
+        "instruction": "商品图片"
+      },
+      {
+        "name": "sale_count",
+        "type": "int",
+        "instruction": "已售数量"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "正常价"
+      },
+      {
+        "name": "groupon_price",
+        "type": "int",
+        "instruction": "团购价"
+      },
+      {
+        "name": "is_group",
+        "type": "int",
+        "instruction": "是否是团购",
+        "comments": "0:非 1:是"
+      },
+      {
+        "name": "market_price",
+        "type": "decimal",
+        "instruction": "市场价"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "instruction": "库存"
+      },
+      {
+        "name": "brand_logo",
+        "type": "string",
+        "instruction": "品牌logo"
+      }
+    ]
+  },
+  {
+    "className": "h3. [216]商家优惠券( /coupon/{id})",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "优惠券id"
+      },
+      {
+        "name": "avail",
+        "type": "int",
+        "instruction": "前端显示"
+      },
+      {
+        "name": "start_date",
+        "type": "int",
+        "instruction": "开始时间"
+      },
+      {
+        "name": "end_date",
+        "type": "int",
+        "instruction": "结束时间"
+      },
+      {
+        "name": "threshold",
+        "type": "decimal",
+        "instruction": "使用条件"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "优惠券金额"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "优惠券状态"
+      },
+      {
+        "name": "nums",
+        "type": "int",
+        "instruction": "优惠券数量"
+      }
+    ]
+  },
+  {
+    "className": "h3. [217]添加购物车( /cart)",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [218]我的购物车( /mycart)",
+    "classParamsList": [
+      {
+        "name": "cp_id",
+        "type": "int",
+        "instruction": "商家id"
+      },
+      {
+        "name": "brands",
+        "type": "array",
+        "instruction": "商家品牌信息",
+        "comments": "id:品牌id"
+      },
+      {
+        "name": "goods_info",
+        "type": "array",
+        "instruction": "商家商品信息"
+      }
+    ]
+  },
+  {
+    "className": "h3. [219]我的地址( /address)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "地址id"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "instruction": "收货人姓名"
+      },
+      {
+        "name": "phone",
+        "type": "int",
+        "instruction": "电话"
+      },
+      {
+        "name": "province",
+        "type": "string",
+        "instruction": "省"
+      },
+      {
+        "name": "city",
+        "type": "string",
+        "instruction": "市"
+      },
+      {
+        "name": "area",
+        "type": "string",
+        "instruction": "区域"
+      },
+      {
+        "name": "address",
+        "type": "string",
+        "instruction": "详细地址"
+      },
+      {
+        "name": "zip",
+        "type": "int",
+        "instruction": "邮编"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "1:默认"
+      }
+    ]
+  },
+  {
+    "className": "h3. [220]编辑或创建地址( /edit-address)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "地址id"
+      }
+    ]
+  },
+  {
+    "className": "h3. [221]提交订单( /create-order)",
+    "classParamsList": [
+      {
+        "name": "order_id",
+        "type": "int",
+        "instruction": "订单id"
+      }
+    ]
+  },
+  {
+    "className": "h3. [222]获取订单( /pay-order/{id})",
+    "classParamsList": [
+      {
+        "name": "order_id",
+        "type": "int",
+        "instruction": "订单id"
+      },
+      {
+        "name": "created",
+        "type": "int",
+        "instruction": "下单时间"
+      },
+      {
+        "name": "pay_price",
+        "type": "decimal",
+        "instruction": "应付金额"
+      },
+      {
+        "name": "pay_date",
+        "type": "int",
+        "instruction": "付款时间"
+      },
+      {
+        "name": "paid_price",
+        "type": "decimal",
+        "instruction": "实付金额"
+      }
+    ]
+  },
+  {
+    "className": "h3. [223]获取账户余额( /my-account)",
+    "classParamsList": [
+      {
+        "name": "money",
+        "type": "decimal",
+        "instruction": "账户余额"
+      }
+    ]
+  },
+  {
+    "className": "h3. [224]使用账户余额( /use-balance)",
+    "classParamsList": [
+      {
+        "name": "money",
+        "type": "decimal",
+        "instruction": "账户余额"
+      }
+    ]
+  },
+  {
+    "className": "h3. [225]支付订单( /payment)",
+    "classParamsList": [
+      {
+        "name": "money",
+        "type": "decimal",
+        "instruction": "账户余额"
+      }
+    ]
+  },
+  {
+    "className": "h3. [226]订单列表( /order-list)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "订单id"
+      },
+      {
+        "name": "created",
+        "type": "int",
+        "instruction": "下单时间"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "订单状态0:待付款,2:待发货,4:已发货;5:已完成;6:已取消"
+      },
+      {
+        "name": "total_price",
+        "type": "decimal",
+        "instruction": "总金额"
+      },
+      {
+        "name": "ship_price",
+        "type": "decimal",
+        "instruction": "运费"
+      },
+      {
+        "name": "bonus_price",
+        "type": "decimal",
+        "instruction": "优惠金额"
+      },
+      {
+        "name": "paid_price",
+        "type": "decimal",
+        "instruction": "实际支付金额"
+      },
+      {
+        "name": "goods_info",
+        "type": "array",
+        "instruction": "商品信息",
+        "comments": "goods_id:商品id"
+      }
+    ]
+  },
+  {
+    "className": "h3. [227]订单详情( /order-detail/{id})",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "订单id"
+      },
+      {
+        "name": "created",
+        "type": "int",
+        "instruction": "下单时间"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "订单状态0:待付款,2:待发货,4:已发货;5:已完成;6:已取消"
+      },
+      {
+        "name": "receiver",
+        "type": "string",
+        "instruction": "收货人"
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "instruction": "收货人电话"
+      },
+      {
+        "name": "address",
+        "type": "string",
+        "instruction": "收货地址"
+      },
+      {
+        "name": "province",
+        "type": "string",
+        "instruction": "省"
+      },
+      {
+        "name": "city",
+        "type": "string",
+        "instruction": "市"
+      },
+      {
+        "name": "area",
+        "type": "string",
+        "instruction": "区"
+      },
+      {
+        "name": "total_price",
+        "type": "decimal",
+        "instruction": "总金额"
+      },
+      {
+        "name": "ship_price",
+        "type": "decimal",
+        "instruction": "运费"
+      },
+      {
+        "name": "bonus_price",
+        "type": "decimal",
+        "instruction": "优惠金额"
+      },
+      {
+        "name": "paid_price",
+        "type": "decimal",
+        "instruction": "实际支付金额"
+      },
+      {
+        "name": "goods_info",
+        "type": "array",
+        "instruction": "商品信息",
+        "comments": "goods_id:商品id"
+      },
+      {
+        "name": "pay_time",
+        "type": "int",
+        "instruction": "支付时间"
+      },
+      {
+        "name": "memo",
+        "type": "string",
+        "instruction": "订单备注"
+      }
+    ]
+  },
+  {
+    "className": "h3. [228]取消订单( /cancel-order/{id})",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [229]订单退款( /refund)",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [230]物流信息( /express)",
+    "classParamsList": [
+      {
+        "name": "action_no",
+        "type": "string",
+        "instruction": "快递单号"
+      },
+      {
+        "name": "kdgs",
+        "type": "string",
+        "instruction": "快递公司"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "状态"
+      }
+    ]
+  },
+  {
+    "className": "h3. [231]用户设备号接口(POST /devicetoken)",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [232]我的优惠券( /mycoupon)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "我的优惠券id"
+      },
+      {
+        "name": "coupon_id",
+        "type": "int",
+        "instruction": "优惠券id"
+      },
+      {
+        "name": "coupon_name",
+        "type": "string",
+        "instruction": "优惠券名称"
+      },
+      {
+        "name": "start_date",
+        "type": "int",
+        "instruction": "开始时间"
+      },
+      {
+        "name": "end_date",
+        "type": "int",
+        "instruction": "结束时间"
+      },
+      {
+        "name": "threshold",
+        "type": "decimal",
+        "instruction": "使用条件"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "优惠券金额"
+      },
+      {
+        "name": "status",
+        "type": "int",
+        "instruction": "优惠券状态"
+      },
+      {
+        "name": "shop_id",
+        "type": "int",
+        "instruction": "店铺id"
+      },
+      {
+        "name": "shop_name",
+        "type": "string",
+        "instruction": "店铺名称"
+      },
+      {
+        "name": "coupon_code",
+        "type": "string",
+        "instruction": "优惠码"
+      },
+      {
+        "name": "order_id",
+        "type": "int",
+        "instruction": "订单id"
+      }
+    ]
+  },
+  {
+    "className": "h3. [233]可用优惠券( /usable-coupon)",
+    "classParamsList": [
+      {
+        "name": "id",
+        "type": "int",
+        "instruction": "我的优惠券id"
+      },
+      {
+        "name": "uid",
+        "type": "int",
+        "instruction": "用户id"
+      },
+      {
+        "name": "coupon_id",
+        "type": "int",
+        "instruction": "优惠券id"
+      },
+      {
+        "name": "coupon_name",
+        "type": "string",
+        "instruction": "优惠券名称"
+      },
+      {
+        "name": "coupon_code_id",
+        "type": "int",
+        "instruction": "优惠码id"
+      },
+      {
+        "name": "coupon_code",
+        "type": "string",
+        "instruction": "优惠码"
+      },
+      {
+        "name": "start_date",
+        "type": "int",
+        "instruction": "开始时间"
+      },
+      {
+        "name": "end_date",
+        "type": "int",
+        "instruction": "结束时间"
+      },
+      {
+        "name": "threshold",
+        "type": "decimal",
+        "instruction": "时间条件"
+      },
+      {
+        "name": "price",
+        "type": "decimal",
+        "instruction": "优惠券金额"
+      },
+      {
+        "name": "cp_id",
+        "type": "int",
+        "instruction": "商家id"
+      }
+    ]
+  },
+  {
+    "className": "h3. [234]删除购物车商品( /del-goods)",
+    "classParamsList": []
+  },
+  {
+    "className": "h3. [235]领取优惠券( /receive-coupon/{id})",
+    "classParamsList": []
+  }
+]

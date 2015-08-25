@@ -1,10 +1,12 @@
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by CX on 2015/6/30.
@@ -28,12 +30,12 @@ public class FinalFantasy {
     /**
      * 要被干的文件名
      */
-    public final static String SOURCE_FILE_NAME = "Aichongtuan.txt";
+    public final static String SOURCE_FILE_NAME = "source.txt";
 
     /**
      * 生成的文件路径
      */
-    public final static String RESULT_FILE_PATH = "/src/main/java/";
+    public final static String RESULT_FILE_PATH = "/src/main/java/models/";
 
     /**
      * 生成文件的包名。统一的？
@@ -41,15 +43,26 @@ public class FinalFantasy {
     public final static String RESULT_PACKAGE = "com.goumin.tuan.entity";
 
 
+    public static final String REQ_FILE_NAME="req_data.json";
+
     /**
      * 请求类的数据集合
      */
-    public static HashMap<String, ArrayList<ClassModel>> reqDataSource = new HashMap<>();
+    public static ArrayList<ClassModel> reqDataSource = new ArrayList<>();
+
+
+    public static final String RESP_FILE_NAME="resp_data.json";
 
     /**
      * 解析类的数据集合
      */
-    public static HashMap<String, ArrayList<ClassModel>> respDataSource = new HashMap<>();
+    public static ArrayList<ClassModel> respDataSource = new ArrayList<>();
+
+    /**
+     * json出来的数据
+     */
+    public static ArrayList<ClassParamsModel> dataJsonList = new ArrayList<>();
+
 
     /**
      * 记录array的model类
@@ -58,49 +71,73 @@ public class FinalFantasy {
 
     public static void main(String[] args) {
         logger.info("start");
-
         genFile();
     }
 
 
     public static void genFile() {
-        String result = readFile();
+//        String result = readFile();
 //        System.out.println(result);
-
-        writeJsonFile("data.json", reqDataSource);
+//        writeJsonFile(REQ_FILE_NAME, reqDataSource);
+//        writeJsonFile(RESP_FILE_NAME, respDataSource);
+        readJsonFile();
         genReq(); //生成req
-        genResp();//生成resp
+//        genResp();//生成resp
 
 
+    }
+
+    public static void readJsonFile() {
+
+        try {
+            Gson gson = new Gson();
+            String str = readStrFile(getProjectPath() + SOURCE_FILE_PATH + REQ_FILE_NAME);
+            reqDataSource = gson.fromJson(str, new TypeToken<ArrayList<ClassModel>>() {
+            }.getType());
+           str = readStrFile(getProjectPath() + SOURCE_FILE_PATH + RESP_FILE_NAME);
+            respDataSource = gson.fromJson(str, new TypeToken<ArrayList<ClassModel>>() {
+            }.getType());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String readStrFile(String fileName) throws IOException {
+        String res = "";
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        try {
+            String e = "";
+            StringBuffer buffer = new StringBuffer();
+
+            while ((e = br.readLine()) != null) {
+                buffer.append(e);
+            }
+
+            res = buffer.toString();
+        } catch (Exception var8) {
+            var8.printStackTrace();
+        } finally {
+            br.close();
+        }
+        return res;
     }
 
 
     public static void writeJsonFile(String jsonFileName, Object jsonFileContent) {
         Gson gson = new Gson();
         String result = gson.toJson(jsonFileContent);
-        saveStr2File(result,jsonFileName);
+        saveStr2File(result, jsonFileName);
     }
 
     /**
      * 生成req
      */
     public static void genReq() {
+
         System.out.println("reqDataSource size " + reqDataSource.size());
-
-
-        Iterator iter = reqDataSource.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            String className = (String) entry.getKey();
-            ArrayList<ClassModel> list = (ArrayList<ClassModel>) entry.getValue();
-
-            System.out.println("classname " + className + " list size " + list.size());
-            if (list != null && list.size() > 0) {
-                System.out.println("first one  " + list.get(0).toString());
-            }
-            writeReqModel(className, list);
-
-
+        for (ClassModel classModel : reqDataSource) {
+            writeReqModel(classModel.className, classModel.classParamsList);
         }
     }
 
@@ -109,17 +146,8 @@ public class FinalFantasy {
      */
     public static void genResp() {
         System.out.println("respDataSource size " + respDataSource.size());
-        Iterator iter = respDataSource.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            String className = (String) entry.getKey();
-            ArrayList<ClassModel> list = (ArrayList<ClassModel>) entry.getValue();
-
-            System.out.println("classname " + className + " list size " + list.size());
-            if (list != null && list.size() > 0) {
-                System.out.println("first one  " + list.get(0).toString());
-            }
-            writeRespModel(className, list);
+        for (ClassModel classModel : respDataSource) {
+            writeRespModel(classModel.className, classModel.classParamsList);
         }
     }
 
@@ -142,8 +170,8 @@ public class FinalFantasy {
             int methodCount = 0;
 
             String className = null;//类名.从h3取得
-            ArrayList<ClassModel> reqModelList = new ArrayList<>();//req字段类
-            ArrayList<ClassModel> respModelList = new ArrayList<>();//resp字段类
+            ArrayList<ClassParamsModel> reqModelList = new ArrayList<>();//req字段类
+            ArrayList<ClassParamsModel> respModelList = new ArrayList<>();//resp字段类
 
             boolean isReqParams = false; //请求类的标识
             boolean isRespParams = false;//解析类的标识
@@ -161,12 +189,14 @@ public class FinalFantasy {
                     methodCount++;
                     //当发现一次h3。就是赋值的时候。那最后一次怎么办？
                     if (className != null && !"".equals(className)) {
-                        reqDataSource.put(className, reqModelList);
+                        ClassModel classModel = new ClassModel(className, reqModelList);
+                        reqDataSource.add(classModel);
                         reqModelList = new ArrayList<>();
                     }
 
                     if (className != null && !"".equals(className)) {
-                        respDataSource.put(className, respModelList);
+                        ClassModel classModel = new ClassModel(className, respModelList);
+                        respDataSource.add(classModel);
                         respModelList = new ArrayList<>();
                     }
 
@@ -176,7 +206,7 @@ public class FinalFantasy {
 
                 //read req
                 if (isReqParams) {
-                    ClassModel classModel = getClassModel(line);
+                    ClassParamsModel classModel = getClassModel(line);
                     System.out.println("classModel null? " + (classModel == null));
                     if (classModel != null) {
                         reqModelList.add(classModel);
@@ -185,7 +215,7 @@ public class FinalFantasy {
 
                 //read resp
                 if (isRespParams) {
-                    ClassModel classModel = getClassModel(line);
+                    ClassParamsModel classModel = getClassModel(line);
                     System.out.println("classModel null? " + (classModel == null));
                     if (classModel != null) {
                         respModelList.add(classModel);
@@ -206,47 +236,18 @@ public class FinalFantasy {
                     }
 
                 }
-
-
-//                //取method下的字段
-//                h3.[201]用户注册接口( / signup)
-//
-//                |\4 =.*发送请求信息参数 * |
-//                |_.参数名称 | _.类型 | _.说明 | _.备注 |
-//                |username | string | 用户名（必填）|字母开头的4 - 16 位字母数字格式（且唯一）|
-//                |password | string | 密码（必填）|6 - 16 位字符 |
-//                |email | string | 邮箱（必填）|邮箱格式 |
-//                |optional | object | 扩展(可选) | 根据模块协议自定义 |
-//
-//                |\4 =.*响应信息参数 * |
-//                |_.参数名称 | _.类型 | _.说明 | _.返回参数值备注 |
-//                |/6. code |/6.int|20101:用户名不符合规则 |/6. |
-//                |20102:用户名已经存在 |
-//                |20103:密码不符合规则 |
-//                |20104:邮箱不符合规则 |
-//                |20105:邮箱已经存在 |
-//                |20106:防垃圾注册限制 |
-//                |message | string | 返回的提示信息 ||
-//
-//                |\4 =.*响应data信息参数 * |
-//                |_.参数名称 | _.类型 | _.说明 | _.返回参数值备注 |
-//                |uid |int|注册成功返回的用户id ||
-//                |token | string | 64 位随机字符串 ||
-//
-//                        h3.[202]用户登录接口( / signin)
-
-
-//                sb.append(line + "\n");
                 line = br.readLine();
             }
             if (reqModelList != null) {
                 //最后一次，如果记录到了。就要搞进去
-                reqDataSource.put(className, reqModelList);
+                ClassModel classModel = new ClassModel(className, reqModelList);
+                reqDataSource.add(classModel);
             }
 
             if (respModelList != null) {
                 //最后一次，如果记录到了。就要搞进去
-                respDataSource.put(className, respModelList);
+                ClassModel classModel = new ClassModel(className, respModelList);
+                respDataSource.add(classModel);
             }
             System.out.println("method count " + methodCount);
 
@@ -274,7 +275,7 @@ public class FinalFantasy {
      * @param _className
      * @param _list
      */
-    public static void writeReqModel(String _className, ArrayList<ClassModel> _list) {
+    public static void writeReqModel(String _className, ArrayList<ClassParamsModel> _list) {
 
         String classComments = _className;
 
@@ -307,7 +308,7 @@ public class FinalFantasy {
         String reqParams = "";
         String jsonStr = "";
 
-        for (ClassModel classModel : _list) {
+        for (ClassParamsModel classModel : _list) {
 
 //            keys += "    private final static String KEY_" + classModel.name.toUpperCase() + " = \"" + classModel.name + "\";\n";
             String type = classModel.type;
@@ -406,7 +407,7 @@ public class FinalFantasy {
      * @param _className
      * @param _list
      */
-    public static void writeRespModel(String _className, ArrayList<ClassModel> _list) {
+    public static void writeRespModel(String _className, ArrayList<ClassParamsModel> _list) {
 
         String classComments = _className;
 
@@ -429,7 +430,7 @@ public class FinalFantasy {
         String toString = ""; //log
 
 
-        for (ClassModel classModel : _list) {
+        for (ClassParamsModel classModel : _list) {
 
             String type = classModel.type;
             String finalClassName = classModel.name;
@@ -492,9 +493,11 @@ public class FinalFantasy {
         try {
 
             String courseFile = getProjectPath();
-
             String path = courseFile + RESULT_FILE_PATH;
-
+            File fileSave=new File(path);
+            if(!fileSave.exists()){
+                fileSave.mkdirs();
+            }
             File file = new File(path, fileName);
             fos = new FileOutputStream(file);
             fos.write(content.getBytes());
@@ -564,7 +567,7 @@ public class FinalFantasy {
      * @param line
      * @return 取得参数的类
      */
-    public static ClassModel getClassModel(String line) {
+    public static ClassParamsModel getClassModel(String line) {
 
         if (line == null) {
             return null;
@@ -579,7 +582,7 @@ public class FinalFantasy {
         if (arr[1].trim().equals("_.参数名称")) {
             return null;
         }
-        ClassModel classModel = new ClassModel();
+        ClassParamsModel classModel = new ClassParamsModel();
         classModel.name = arr[1].trim();
         classModel.type = arr[2].trim();
         //下面两个字段不是一直都有

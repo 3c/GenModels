@@ -1,31 +1,24 @@
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
- * Created by CX on 2015/6/30.
+ * Created by CX on 2015/8/26.
  */
-public class ClassModel {
-    /**
-     * 字段名称
-     */
-    public String name;
-    /**
-     * 字段类型
-     */
-    public String type;
-    /**
-     * 说明
-     */
-    public String instruction;
-    /**
-     * 备注
-     */
-    public String comments;
+public class ClassModel implements Serializable {
+
+    public String className = "";
+    public ArrayList<ClassParamsModel> classParamsList = new ArrayList<>();
+
+    public ClassModel(String _className, ArrayList<ClassParamsModel> _classParamsList) {
+        className = _className;
+        classParamsList = _classParamsList;
+    }
 
     @Override
     public String toString() {
         return "ClassModel{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", instruction='" + instruction + '\'' +
-                ", comments='" + comments + '\'' +
+                "className='" + className + '\'' +
+                ", classParamsList=" + classParamsList +
                 '}';
     }
 }
