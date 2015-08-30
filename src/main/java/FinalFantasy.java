@@ -80,7 +80,7 @@ public class FinalFantasy {
 //        writeJsonFile(RESP_FILE_NAME, respDataSource);
 //        readJsonFile();
         genReq(); //生成req
-//        genResp();//生成resp
+        genResp();//生成resp
 
 
     }
@@ -401,8 +401,8 @@ public class FinalFantasy {
         }
 
         String allJsonStr;
-        if ("".equals(jsonStr)) {
-            //json 字段是空的
+        if ("".equals(jsonStr) || ClassModel.REQ_TYPE_GET.equals(_classModel.requestType)) {
+            //json 字段是空的 或者 请求是get
             allJsonStr = "    @Override\n" +
                     "    public ReqParams getRequestParams() {\n" +
                     "        return null;\n" +
@@ -411,7 +411,7 @@ public class FinalFantasy {
             allJsonStr = "    @Override\n" +
                     "    public ReqParams getRequestParams() {\n" +
                     "        ReqParams reqParams = new ReqParams();\n" +
-                    jsonStr + "\n" +
+                    jsonStr +
                     "        return reqParams;\n" +
                     "    }";
         }
@@ -433,6 +433,20 @@ public class FinalFantasy {
             respClass += "[]";
         }
 
+        String httpType = "post";
+        if (ClassModel.REQ_TYPE_GET.equals(_classModel.requestType)) {
+            httpType = "get";
+        }
+
+        String httpMethod = "    /**\n" +
+                "     * 网络请求 哦呼\n" +
+                "     * @param _context      引用\n" +
+                "     * @param _gmApiHandler 回调的参数\n" +
+                "     */\n" +
+                "    public void httpData(Context _context, GMApiHandler<" + respClass + "> _gmApiHandler) {\n" +
+                "        GMNetRequest.getInstance()." + httpType + "(_context, this, _gmApiHandler);\n" +
+                "    }";
+
         String endStr = "    @Override\n" +
                 "    public Class getJsonCls() {\n" +
                 "        return " + respClass + ".class;\n" +
@@ -446,6 +460,7 @@ public class FinalFantasy {
                 allJsonStr +
                 "\n" +
                 "\n" +
+                httpMethod + "\n\n" +
                 "}";
 
 //        String finalResultContent = packageAndImport + className + keys + "\n\n" + reqParams + "\n\n" + endStr;
@@ -506,7 +521,7 @@ public class FinalFantasy {
                 String realType = arrs[0];
                 String innerClassName = arrs[1];
                 innerClassName = innerClassName.replaceFirst(innerClassName.substring(0, 1), innerClassName.substring(0, 1).toUpperCase());
-                if(!"String".equals(innerClassName)){
+                if (!"String".equals(innerClassName)) {
                     //如果不是string，就上Model
                     innerClassName += "Model";
                 }

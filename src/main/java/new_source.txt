@@ -7,10 +7,13 @@
 	
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
-		type | int | 注册类型，只支持1
+		type | int | 1:电话。9:匿名
 		phone | string | 电话号
 		password | string | 密码
-		code | string | 验证码
+		deviceID| string | 手机的id,用于识别
+		pushID| string | 手机的id,用于Push
+		deviceType| int| 1:ios,2:android
+	
 	
 	+ 返回结果
 	
@@ -24,8 +27,9 @@
 	
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
-		uid | string | 用户id
-
+		user| obj:user| 用户信息
+		phases| array:phases| 阶段列表
+		messages| array:messages| 消息列表
 ### 课程相关
 - 获取所有的课程 包括课时
  + 请求链接: courses?cache
@@ -45,7 +49,8 @@
 		--- | --- | --- | --- |
 		cache | string | 缓存id |
 		phases | array:phases | 阶段数组 | 
-		courses | array:other | 课程数组 | 
+		courses | array:courses | 课程数组 | 
+		config| obj:config| 配置信息 | 
 
 - 获取某个课程的详情
  + 请求链接: course/detail/:courseId
@@ -57,17 +62,25 @@
 		--- | --- | --- | --- |
 		courseId | string | 课程的id
  + 返回结果
-	
-		
  + 返回数据
 	
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
 		count | int | 参加这个课程的总人数 |
 		attends | array:string | 参加这个课程的人 | 
-		
 
+		
 ### 通用内部类
+- 用户信息
+ + 请求链接: user
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		id| string | 用户id |
+		name | string | 用户名字|
 - 课程
  + 请求链接: courses
  + 请求方式: inner
