@@ -30,7 +30,7 @@ public class FinalFantasy {
     /**
      * 要被干的文件名
      */
-    public final static String SOURCE_FILE_NAME = "source.txt";
+    public final static String SOURCE_FILE_NAME = "new_source.txt";
 
     /**
      * 生成的文件路径
@@ -40,10 +40,10 @@ public class FinalFantasy {
     /**
      * 生成文件的包名。统一的？
      */
-    public final static String RESULT_PACKAGE = "com.goumin.tuan.entity";
+    public final static String RESULT_PACKAGE = "com.s2t.app.yoga.entity";
 
 
-    public static final String REQ_FILE_NAME="req_data.json";
+    public static final String REQ_FILE_NAME = "req_data.json";
 
     /**
      * 请求类的数据集合
@@ -51,7 +51,7 @@ public class FinalFantasy {
     public static ArrayList<ClassModel> reqDataSource = new ArrayList<>();
 
 
-    public static final String RESP_FILE_NAME="resp_data.json";
+    public static final String RESP_FILE_NAME = "resp_data.json";
 
     /**
      * 解析类的数据集合
@@ -67,8 +67,7 @@ public class FinalFantasy {
     /**
      * 记录array的model类
      */
-    public static ArrayList<String> listWithArray = new ArrayList<>();
-
+//    public static ArrayList<String> listWithArray = new ArrayList<>();
     public static void main(String[] args) {
         logger.info("start");
         genFile();
@@ -76,11 +75,10 @@ public class FinalFantasy {
 
 
     public static void genFile() {
-//        String result = readFile();
-//        System.out.println(result);
+        String result = readFile();
 //        writeJsonFile(REQ_FILE_NAME, reqDataSource);
 //        writeJsonFile(RESP_FILE_NAME, respDataSource);
-        readJsonFile();
+//        readJsonFile();
         genReq(); //生成req
 //        genResp();//生成resp
 
@@ -94,7 +92,7 @@ public class FinalFantasy {
             String str = readStrFile(getProjectPath() + SOURCE_FILE_PATH + REQ_FILE_NAME);
             reqDataSource = gson.fromJson(str, new TypeToken<ArrayList<ClassModel>>() {
             }.getType());
-           str = readStrFile(getProjectPath() + SOURCE_FILE_PATH + RESP_FILE_NAME);
+            str = readStrFile(getProjectPath() + SOURCE_FILE_PATH + RESP_FILE_NAME);
             respDataSource = gson.fromJson(str, new TypeToken<ArrayList<ClassModel>>() {
             }.getType());
 
@@ -135,9 +133,9 @@ public class FinalFantasy {
      */
     public static void genReq() {
 
-        System.out.println("reqDataSource size " + reqDataSource.size());
+        logger.info("reqDataSource size " + reqDataSource.size());
         for (ClassModel classModel : reqDataSource) {
-            writeReqModel(classModel.className, classModel.classParamsList);
+            writeReqModel(classModel);
         }
     }
 
@@ -145,10 +143,23 @@ public class FinalFantasy {
      * 生成resp
      */
     public static void genResp() {
-        System.out.println("respDataSource size " + respDataSource.size());
+        logger.info("respDataSource size " + respDataSource.size());
         for (ClassModel classModel : respDataSource) {
-            writeRespModel(classModel.className, classModel.classParamsList);
+            writeRespModel(classModel);
         }
+    }
+
+    public static String getLineValue(String line) {
+        if (StringUtil.isEmpty(line)) {
+            return null;
+        }
+        String result = null;
+        try {
+            result = line.substring(line.indexOf(":") + 1, line.length()).trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     /**
@@ -166,8 +177,12 @@ public class FinalFantasy {
             BufferedReader br = new BufferedReader(new FileReader(path));
 //            StringBuilder sb = new StringBuilder();
             String line = br.readLine();
-
             int methodCount = 0;
+
+
+            String requestType = ClassModel.REQ_TYPE_POST;
+            String respType = ClassModel.RESP_TYPE_OBJECT;
+            String classComments = "";
 
             String className = null;//类名.从h3取得
             ArrayList<ClassParamsModel> reqModelList = new ArrayList<>();//req字段类
@@ -178,36 +193,33 @@ public class FinalFantasy {
 
             while (line != null) {
 
-                //基础逻辑。h3 是关键位置。标志每一个method的开始。旗下有三种框，请求的，响应结果，和返回字段
+                //基础逻辑。- 是关键位置。标志每一个method的开始。旗下有三种框，请求的，响应结果，和返回字段
 
                 //取类名
-                if (line.startsWith("h3")) {
+                if (line.startsWith("-")) {
 
                     //h3 标志 resp结束
                     isRespParams = false;
 
                     methodCount++;
-                    //当发现一次h3。就是赋值的时候。那最后一次怎么办？
-                    if (className != null && !"".equals(className)) {
-                        ClassModel classModel = new ClassModel(className, reqModelList);
-                        reqDataSource.add(classModel);
+
+                    if (!StringUtil.isEmpty(className)) {
+                        addReqClass(getClassModel(className, reqModelList, requestType, respType, classComments));
                         reqModelList = new ArrayList<>();
                     }
 
-                    if (className != null && !"".equals(className)) {
-                        ClassModel classModel = new ClassModel(className, respModelList);
-                        respDataSource.add(classModel);
+                    if (!StringUtil.isEmpty(className)) {
+                        addRespClass(getClassModel(className, respModelList, requestType, respType, classComments));
                         respModelList = new ArrayList<>();
                     }
 
-                    className = line;
-//                    System.out.println("className---> "+className);
+
+                    classComments = line + " ";
                 }
 
                 //read req
                 if (isReqParams) {
-                    ClassParamsModel classModel = getClassModel(line);
-                    System.out.println("classModel null? " + (classModel == null));
+                    ClassParamsModel classModel = getClassParamsModel(line);
                     if (classModel != null) {
                         reqModelList.add(classModel);
                     }
@@ -215,41 +227,54 @@ public class FinalFantasy {
 
                 //read resp
                 if (isRespParams) {
-                    ClassParamsModel classModel = getClassModel(line);
-                    System.out.println("classModel null? " + (classModel == null));
+                    ClassParamsModel classModel = getClassParamsModel(line);
                     if (classModel != null) {
                         respModelList.add(classModel);
                     }
                 }
 
-                if (line.contains("发送请求信息参数")) {
+                if (line.contains("请求链接")) {
+                    className = getLineValue(line);
+                    logger.info("className---> " + className);
+                } else if (line.contains("请求方式")) {
+                    requestType = getLineValue(line).toLowerCase();
+                    if (StringUtil.isEmpty(requestType)) {
+                        requestType = ClassModel.REQ_TYPE_POST;
+                    }
+                } else if (line.contains("请求说明")) {
+                    String comments = getLineValue(line);
+                    if (!StringUtil.isEmpty(comments)) {
+                        classComments += comments;
+                    }
+                } else if (line.contains("请求参数")) {
                     //这里标识可以取req数据了
                     isReqParams = true;
-                } else if (line.contains("响应状态信息参数")) {
+                } else if (line.contains("返回结果")) {
                     //停止读取req用的字段
                     isReqParams = false;
-                } else if (line.contains("响应正文data信息参数")) {
+                } else if (line.contains("返回数据")) {
                     //开始读取resp
                     isRespParams = true;
                     if (line.contains("array")) {
-                        listWithArray.add(className);
+                        respType = ClassModel.RESP_TYPE_ARRAY;
+                    } else {
+                        respType = ClassModel.RESP_TYPE_OBJECT;
                     }
 
                 }
                 line = br.readLine();
             }
+
             if (reqModelList != null) {
                 //最后一次，如果记录到了。就要搞进去
-                ClassModel classModel = new ClassModel(className, reqModelList);
-                reqDataSource.add(classModel);
+                addReqClass(getClassModel(className, reqModelList, requestType, respType, classComments));
             }
 
             if (respModelList != null) {
                 //最后一次，如果记录到了。就要搞进去
-                ClassModel classModel = new ClassModel(className, respModelList);
-                respDataSource.add(classModel);
+                addRespClass(getClassModel(className, respModelList, requestType, respType, classComments));
             }
-            System.out.println("method count " + methodCount);
+            logger.info("method count " + methodCount);
 
 //            everything = sb.toString();
             br.close();
@@ -259,6 +284,49 @@ public class FinalFantasy {
         }
 
         return everything;
+    }
+
+
+    /**
+     * 添加请求类
+     *
+     * @param _classModel
+     */
+    public static void addReqClass(ClassModel _classModel) {
+        String reqType = _classModel.requestType;
+        //内部类不需要请求
+        if ("inner".equals(reqType)) {
+            return;
+        }
+        reqDataSource.add(_classModel);
+    }
+
+    /**
+     * 添加响应类
+     *
+     * @param _classModel
+     */
+    public static void addRespClass(ClassModel _classModel) {
+        respDataSource.add(_classModel);
+    }
+
+    /**
+     * 根据给定的字段，获取值
+     *
+     * @param className
+     * @param respModelList
+     * @param requestType
+     * @param respType
+     * @param classComments
+     * @return
+     */
+    public static ClassModel getClassModel(String className, ArrayList<ClassParamsModel> respModelList, String requestType, String respType, String classComments) {
+        ClassModel classModel = new ClassModel(className, respModelList);
+        classModel.requestType = requestType;
+        classModel.respType = respType;
+        classModel.comments = classComments;
+        return classModel;
+
     }
 
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -271,29 +339,30 @@ public class FinalFantasy {
 
     /**
      * 生成req类
-     *
-     * @param _className
-     * @param _list
      */
-    public static void writeReqModel(String _className, ArrayList<ClassParamsModel> _list) {
+    public static void writeReqModel(ClassModel _classModel) {
 
-        String classComments = _className;
+        String _className = _classModel.className; //类名
+        ArrayList<ClassParamsModel> _list = _classModel.classParamsList;
+
+        String classComments = "api : " + _className + "  " + _classModel.comments; //类的注释
 
         boolean isArrayResp = false;
 
-        if (listWithArray.contains(_className)) {
+        if (ClassModel.RESP_TYPE_ARRAY.equals(_classModel.respType)) {
             isArrayResp = true;
         }
 
         _className = getClassName(_className);
+        logger.info("_className " + _className);
 
         String packageAndImport = "package " + RESULT_PACKAGE + ";\n\n" +
-                "import com.goumin.lib.net.AbsGMRequest;\n" +
-                "import org.json.JSONArray;\n" +
-                "import org.json.JSONException;\n" +
-                "import java.util.ArrayList;\n" +
-                "import com.gm.common.utils.CollectionUtil;\n" +
-                "import org.json.JSONObject;\n\n";
+                "import android.content.Context;\n" +
+                "import com.gm.common.utils.LogUtil;\n" +
+                "import com.gm.common.utils.StringUtils;\n" +
+                "import com.gm.lib.net.AbsGMRequest;\n" +
+                "import com.gm.lib.net.GMApiHandler;\n" +
+                "import com.gm.lib.net.ReqParams;\n\n";
 
         String reqClassName = _className + "Req";
 
@@ -314,30 +383,19 @@ public class FinalFantasy {
             String type = classModel.type;
             if (type.equals("string")) {
                 type = "String";
-            } else if (type.equals("decimal")) {
-                type = "float";
+            } else if (type.equals("int")) {
+                type = "int";
             } else if (type.equals("array")) {
-
                 //数组格式的
-
-
-                jsonStr += "            JSONArray " + classModel.name + "JsonArray=new JSONArray();\n" +
-                        "            if(CollectionUtil.isListMoreOne(" + classModel.name + ")){\n" +
-                        "                for(String tag:" + classModel.name + "){\n" +
-                        "                    " + classModel.name + "JsonArray.put(tag);\n" +
-                        "                }\n" +
-                        "            }\n";
-
-
-                type = "ArrayList<String>"; //列表的暂时还没办法抓取,统一为String
-            } else if (type.equals("object")) {
+                type = "ArrayList<" + classModel.name + ">"; //列表的暂时还没办法抓取,统一为String
+            } else {
                 type = "Object";
             }
 
             reqParams += "    public " + type + " " + classModel.name + ";\n";
 
 
-            jsonStr += "            jsonObject.put(\"" + classModel.name + "\", " + classModel.name + "); //" + classModel.instruction + "\n";
+            jsonStr += "        reqParams.put(\"" + classModel.name + "\", " + classModel.name + "); //" + classModel.instruction + "\n";
 
 
         }
@@ -346,26 +404,25 @@ public class FinalFantasy {
         if ("".equals(jsonStr)) {
             //json 字段是空的
             allJsonStr = "    @Override\n" +
-                    "    public JSONObject getJsonObject() {\n" +
+                    "    public ReqParams getRequestParams() {\n" +
                     "        return null;\n" +
                     "    }";
         } else {
             allJsonStr = "    @Override\n" +
-                    "    public JSONObject getJsonObject() {\n" +
-                    "        JSONObject jsonObject = new JSONObject();\n" +
-                    "        try {\n" +
+                    "    public ReqParams getRequestParams() {\n" +
+                    "        ReqParams reqParams = new ReqParams();\n" +
                     jsonStr + "\n" +
-                    "        } catch (JSONException e) {\n" +
-                    "            e.printStackTrace();\n" +
-                    "        }\n" +
-                    "\n" +
-                    "        return jsonObject;\n" +
+                    "        return reqParams;\n" +
                     "    }";
         }
-        String action = getReqAction(classComments);
 
-        if (classComments.contains("{id}")) {
-            action += "/\"+id";
+        String action = getReqAction(_classModel.className);
+
+        if (_classModel.className.contains("/:")) {
+            //id 的默认只有一个，取第一个
+            action += "/\"+" + _classModel.classParamsList.get(0).name;
+        } else if (_classModel.className.contains("?")) {
+            action += "/\"+" + _classModel.classParamsList.get(0).name;
         } else {
             action += "\"";
         }
@@ -403,21 +460,26 @@ public class FinalFantasy {
 
     /**
      * 生成resp类
-     *
-     * @param _className
-     * @param _list
      */
-    public static void writeRespModel(String _className, ArrayList<ClassParamsModel> _list) {
+    public static void writeRespModel(ClassModel _classModel) {
 
-        String classComments = _className;
+        logger.info(_classModel.toString());
+
+        String _className = _classModel.className;
+        ArrayList<ClassParamsModel> _list = _classModel.classParamsList;
+
+        String classComments = "api : " + _className + "  " + _classModel.comments; //类的注释
 
         _className = getClassName(_className);
 
         String packageAndImport = "package " + RESULT_PACKAGE + ";\n\n" +
                 "import java.io.Serializable;\n" +
                 "import java.util.ArrayList;\n\n";
-
         String respClassName = _className + "Resp";
+
+        if ("inner".equals(_classModel.requestType)) {
+            respClassName = _className + "Model";
+        }
 
         String className = "/**\n" +
                 " * Created by auto.\n" +
@@ -433,23 +495,33 @@ public class FinalFantasy {
         for (ClassParamsModel classModel : _list) {
 
             String type = classModel.type;
-            String finalClassName = classModel.name;
+            String finalClassParamsName = classModel.name;
             if (type.equals("string")) {
                 type = "String";
-                finalClassName += " = \"\"";
-            } else if (type.equals("decimal")) {
-                type = "float";
-            } else if (type.equals("array")) {
-                type = "ArrayList<String>"; //列表的暂时还没办法抓取,统一为String
-                finalClassName += " = new ArrayList<>()";
-            } else if (type.equals("text")) {
-                type = "ArrayList<String>";
-                finalClassName += " = new ArrayList<>()";
-            } else if (type.equals("object")) {
+                finalClassParamsName += " = \"\"";
+            } else if (type.equals("int")) {
+                type = "int";
+            } else if (type.contains(":")) {
+                String[] arrs = type.split(":");
+                String realType = arrs[0];
+                String innerClassName = arrs[1];
+                innerClassName = innerClassName.replaceFirst(innerClassName.substring(0, 1), innerClassName.substring(0, 1).toUpperCase());
+                if(!"String".equals(innerClassName)){
+                    //如果不是string，就上Model
+                    innerClassName += "Model";
+                }
+                if ("array".equals(realType)) {
+                    type = "ArrayList<" + innerClassName + ">"; //列表的暂时还没办法抓取,统一为String
+                    finalClassParamsName += " = new ArrayList<>()";
+                } else {
+                    type = innerClassName;
+                    finalClassParamsName += " = new " + innerClassName + "()";
+                }
+            } else {
                 type = "Object";
             }
 
-            respParams += "    public " + type + " " + finalClassName + ";  // " + classModel.instruction + "\n";
+            respParams += "    public " + type + " " + finalClassParamsName + ";  // " + classModel.instruction + "\n";
             toString += "                \"" + classModel.name + "='\" + " + classModel.name + " + '\\'' +\n";
 
         }
@@ -494,8 +566,8 @@ public class FinalFantasy {
 
             String courseFile = getProjectPath();
             String path = courseFile + RESULT_FILE_PATH;
-            File fileSave=new File(path);
-            if(!fileSave.exists()){
+            File fileSave = new File(path);
+            if (!fileSave.exists()) {
                 fileSave.mkdirs();
             }
             File file = new File(path, fileName);
@@ -518,25 +590,27 @@ public class FinalFantasy {
      * @return 取得类名
      */
     public static String getClassName(String line) {
-//        h3. [201]用户注册接口( /signup)
-        String className = "";
-        className = line.substring(line.indexOf("/") + 1, line.length());
-        if (className.endsWith(")")) {
-            className = className.substring(0, className.length() - 1);
+//       /api/user/bind/:userId
+        String className = line;
+
+        //去掉?
+        if (className.contains("?")) {
+            className = className.substring(0, className.lastIndexOf("?"));
         }
 
         //去掉id
-        if (className.endsWith("{id}")) {
-            className = className.substring(0, className.length() - 5);
+        if (className.contains("/:")) {
+            className = className.substring(0, className.lastIndexOf("/"));
         }
-
-        int length = className.indexOf("-");
+        int length = className.indexOf("/");
 
         if (length != -1) {
-            String[] arr = className.split("-");
+            String[] arr = className.split("/");
             className = "";
             for (String str : arr) {
-                className += str.replaceFirst(str.substring(0, 1), str.substring(0, 1).toUpperCase());
+                if (!StringUtil.isEmpty(str)) {
+                    className += str.replaceFirst(str.substring(0, 1), str.substring(0, 1).toUpperCase());
+                }
             }
         } else {
             className = className.replaceFirst(className.substring(0, 1), className.substring(0, 1).toUpperCase());
@@ -550,15 +624,14 @@ public class FinalFantasy {
      */
     public static String getReqAction(String line) {
 //        h3. [201]用户注册接口( /signup)
-        String className = "";
-        className = line.substring(line.indexOf("/") + 1, line.length());
-        if (className.endsWith(")")) {
-            className = className.substring(0, className.length() - 1);
+        String className = line;
+        //去掉?
+        if (className.contains("?")) {
+            className = className.substring(0, className.lastIndexOf("?"));
         }
-
         //去掉id
-        if (className.endsWith("{id}")) {
-            className = className.substring(0, className.length() - 5);
+        if (className.contains("/:")) {
+            className = className.substring(0, className.lastIndexOf("/"));
         }
         return className;
     }
@@ -567,31 +640,37 @@ public class FinalFantasy {
      * @param line
      * @return 取得参数的类
      */
-    public static ClassParamsModel getClassModel(String line) {
-
-        if (line == null) {
+    public static ClassParamsModel getClassParamsModel(String line) {
+        if (StringUtil.isEmpty(line)) {
             return null;
         }
-//        System.out.println("class model line " + line);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("class model line:" + line + "\n");
         String[] arr = line.split("\\|");
+        stringBuilder.append("arr.length " + arr.length + "\n");
         if (arr.length < 3) {
             //至少两个字段，name  和 type.加上第一个空格的，所以是3个
             return null;
         }
         //过滤掉参数名称
-        if (arr[1].trim().equals("_.参数名称")) {
+        String firstParams = arr[0].trim();
+        stringBuilder.append("firstParams:" + firstParams + "\n");
+        if ("名字".equals(firstParams) || "---".equals(firstParams)) {
             return null;
         }
         ClassParamsModel classModel = new ClassParamsModel();
-        classModel.name = arr[1].trim();
-        classModel.type = arr[2].trim();
+        classModel.name = arr[0].trim();
+        classModel.type = arr[1].trim();
         //下面两个字段不是一直都有
+        if (arr.length > 2) {
+            classModel.instruction = arr[2].trim();
+        }
         if (arr.length > 3) {
-            classModel.instruction = arr[3].trim();
+            classModel.comments = arr[3].trim();
         }
-        if (arr.length > 4) {
-            classModel.comments = arr[4].trim();
-        }
+
+        logger.info("message " + stringBuilder.toString());
         return classModel;
     }
 

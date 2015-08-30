@@ -237,11 +237,11 @@ h3. [211]商品列表页( /goods)
 |\4=.*发送请求信息参数*|
 |_.参数名称|_.类型|_.说明|_.备注|
 |cat_id|int|分类id||
-|type|int|分类类型|0:特卖;1:团购|
-|price|int|0:由低到高;1:由高到低||
-|sale|int|0:由低到高;1:由高到低||
-|page|int|分页|默认1|
-|count|int|数量||
+               |type|int|分类类型|0:特卖;1:团购|
+               |price|int|0:由低到高;1:由高到低||
+               |sale|int|0:由低到高;1:由高到低||
+               |page|int|分页|默认1|
+               |count|int|数量||
 
 |\4=.*响应状态信息参数*|
 |_.参数名称|_.类型|_.说明|_.备注|
@@ -251,11 +251,11 @@ h3. [211]商品列表页( /goods)
 
 |\4=.*响应正文data信息参数(array)*|
 |_.参数名称|_.类型|_.说明|_.备注|
-|goods_id|int|商品id||
-|goods_name|string|商品名称||
-|goods_brand|string|商品品牌||
-|goods_img|string|商品图片||
-|sale_count|int|已售数量||
+                      |goods_id|int|商品id||
+                      |goods_name|string|商品名称||
+                      |goods_brand|string|商品品牌||
+                      |goods_img|string|商品图片||
+                      |sale_count|int|已售数量||
 |price|decimal|正常价||
 |market_price|decimal|市场价||
 |brand_logo|string|品牌logo||
