@@ -67,7 +67,7 @@
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
 		count | int | 参加这个课程的总人数 |
-		attends | array:string | 参加这个课程的人 | 
+		attends | array:SimpleUser | 参加这个课程的人 | 
 
 		
 ### 通用内部类
@@ -81,6 +81,31 @@
 		--- | --- | --- | --- |
 		id| string | 用户id |
 		name | string | 用户名字|
+
+- 课程里的设置
+ + 请求链接: config
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		_id| string | 用户id |
+		name | string | 用户名字|
+		content | array:content | 用户名字|
+
+- 课程里的设置的内容列表
+ + 请求链接: content
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		id| string | 用户id |
+		name | string | 用户名字|
+		order | int | 用户名字|
+
 - 课程
  + 请求链接: courses
  + 请求方式: inner
@@ -89,8 +114,15 @@
 	
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
-		_id | string | 课程id |
-		name | string | 基础课程 |
+		_id | string | 阶段id |
+		name | string | 胸部运动 |
+		description| string | 胸部运动 |
+		recommandTime| string | 胸部运动 |
+		category| string | 胸部运动 |
+		duration| string | 胸部运动 |
+		level | string | 胸部运动 |
+		cover| string| 胸部运动 |
+		part| string| 胸部运动 |
 
 - 阶段
  + 请求链接: phases
@@ -101,4 +133,46 @@
 		名字 | 类型 | 注释 | 备注
 		--- | --- | --- | --- |
 		_id | string | 阶段id |
+		course| string | 胸部运动 |
 		name | string | 胸部运动 |
+		calorie| string | 胸部运动 |
+		duration| string | 胸部运动 |
+		description| string | 胸部运动 |
+		resources| string | 胸部运动 |
+		name | string | 胸部运动 |
+		steps| array:steps| 胸部运动 |
+
+- 阶段里的步骤
+ + 请求链接: steps
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		time | string | 阶段id |
+		pose| obj:pose | 胸部运动 |
+
+- 阶段里的步骤里的姿势
+ + 请求链接: pose
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		name | string | 阶段id |
+		cover| string | 胸部运动 |
+		id| string | 胸部运动 |
+
+- 简单用户
+ + 请求链接: SimpleUser
+ + 请求方式: inner
+ + 返回结果
+ + 返回数据 
+	
+		名字 | 类型 | 注释 | 备注
+		--- | --- | --- | --- |
+		_id | string | 用户id |
+		name | string | 用户名 |
+                avatar | string | 头像地址 |

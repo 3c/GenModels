@@ -361,6 +361,7 @@ public class FinalFantasy {
                 "import com.gm.common.utils.LogUtil;\n" +
                 "import com.gm.common.utils.StringUtils;\n" +
                 "import com.gm.lib.net.AbsGMRequest;\n" +
+                "import com.gm.lib.net.GMNetRequest;\n" +
                 "import com.gm.lib.net.GMApiHandler;\n" +
                 "import com.gm.lib.net.ReqParams;\n\n";
 
@@ -422,7 +423,14 @@ public class FinalFantasy {
             //id 的默认只有一个，取第一个
             action += "/\"+" + _classModel.classParamsList.get(0).name;
         } else if (_classModel.className.contains("?")) {
-            action += "/\"+" + _classModel.classParamsList.get(0).name;
+            for (int i = 0; i < _classModel.classParamsList.size(); i++) {
+                String paramsName = _classModel.classParamsList.get(i).name;
+                if (i == 0) {
+                    action += "?" + paramsName + "=\"+" + paramsName;
+                } else {
+                    action += "&" + paramsName + "=\"+" + paramsName;
+                }
+            }
         } else {
             action += "\"";
         }
